@@ -22,7 +22,8 @@ def _extract_user_id(message: Message) -> int | None:
 @router.message(Command("start"))
 async def start_command(message: Message) -> None:
     await message.answer(
-        "Привет! Сначала получите JWT в Auth Service, затем отправьте его командой:\n"
+        "Это бот с доступом к большой языковой модели по JWT-токену\n"
+        "Сначала получите JWT в Auth Service, и отправьте его командой:\n"
         "/token <jwt>"
     )
 
@@ -58,7 +59,7 @@ async def token_command(
     redis_client = get_redis()
     await redis_client.set(token_key(tg_user_id), token)
 
-    await message.answer("JWT-токен принят и сохранён.")
+    await message.answer("Токен принят и сохранен. Отправьте запрос модели")
 
 
 @router.message(F.text)
@@ -90,10 +91,10 @@ async def handle_text_message(message: Message) -> None:
     except ValueError:
         await redis_client.delete(token_key(tg_user_id))
         await message.answer(
-            "Доступ запрещен: JWT-токен неверный или истёк. "
+            "Доступ запрещен: JWT-токен неверный или истек. "
             "Получите новый токен в Auth Service."
         )
         return
 
     llm_request.delay(message.chat.id, message.text)
-    await message.answer("Запрос принят в очередь. Ответ придет после обработки.")
+    await message.answer("Запрос принят. Ответ придет следующим сообщением.")
