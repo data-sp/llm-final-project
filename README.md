@@ -130,8 +130,8 @@ RABBITMQ_URL=amqp://guest:guest@localhost:5672//
 
 ## Пользовательский сценарий
 
-1. Откройте Swagger Auth Service.
-2. Выполните `POST /auth/register`.
+1. Откройте Swagger Auth Service
+2. Выполните `POST /auth/register`
 
 Пример:
 
